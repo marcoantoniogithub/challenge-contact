@@ -4,6 +4,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.launchActivity
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.platform.app.InstrumentationRegistry
@@ -28,6 +29,7 @@ class MainActivityTest {
             moveToState(Lifecycle.State.RESUMED)
 
             onView(withText(expectedTitle)).check(matches(isDisplayed()))
+            onView(ViewMatchers.withId(R.id.user_list_progress_bar)).check(matches(isDisplayed()))
         }
     }
 
@@ -45,7 +47,7 @@ class MainActivityTest {
         server.start(serverPort)
 
         launchActivity<MainActivity>().apply {
-            // TODO("validate if list displays items returned by server")
+            onView(ViewMatchers.withId(R.id.recyclerView)).check(matches(isDisplayed()))
         }
 
         server.close()
