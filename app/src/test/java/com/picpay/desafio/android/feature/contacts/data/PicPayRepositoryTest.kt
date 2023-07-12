@@ -10,11 +10,10 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
-class PicPayRepositoryTest: BaseTest() {
+class PicPayRepositoryTest : BaseTest() {
 
     private val local: PicPayDataSourceLocal = mockk()
     private val remote: PicPayDataSourceRemote = mockk()
@@ -28,52 +27,49 @@ class PicPayRepositoryTest: BaseTest() {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `should call getUsers when have users in local return local`() =
-        runTest(StandardTestDispatcher()) {
-            val mockResultRemote = emptyList<User>()
-            val mockResultLocal = mockedListUser()
-            val mockResult = mockedListUser()
+    fun `should call getUsers when have users in local return local`() = runTest {
+        val mockResultRemote = emptyList<User>()
+        val mockResultLocal = mockedListUser()
+        val mockResult = mockedListUser()
 
-            coEvery { remote.getUsers() } returns mockResultRemote
-            coEvery { local.getUsers() } returns mockResultLocal
+        coEvery { remote.getUsers() } returns mockResultRemote
+        coEvery { local.getUsers() } returns mockResultLocal
 
-            val result = repository.getUsers()
+        val result = repository.getUsers()
 
-            coVerify(exactly = 0) { remote.getUsers() }
+        coVerify(exactly = 0) { remote.getUsers() }
 
-            assertEquals(mockResult, result)
-        }
+        assertEquals(mockResult, result)
+    }
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `should call getUsers when don´t have users in local called remote`() =
-        runTest(StandardTestDispatcher()) {
-            val mockResultRemote = mockedListUser()
-            val mockResultLocal = emptyList<User>()
-            val mockResult = mockedListUser()
+    fun `should call getUsers when don´t have users in local called remote`() = runTest {
+        val mockResultRemote = mockedListUser()
+        val mockResultLocal = emptyList<User>()
+        val mockResult = mockedListUser()
 
-            coEvery { remote.getUsers() } returns mockResultRemote
-            coEvery { local.getUsers() } returns mockResultLocal
-            coEvery { local.deleteAll() } returns Unit
-            coEvery { local.insertAll(mockedListUser()) } returns Unit
+        coEvery { remote.getUsers() } returns mockResultRemote
+        coEvery { local.getUsers() } returns mockResultLocal
+        coEvery { local.deleteAll() } returns Unit
+        coEvery { local.insertAll(mockedListUser()) } returns Unit
 
-            val result = repository.getUsers()
+        val result = repository.getUsers()
 
-            coVerify(exactly = 1) { local.getUsers() }
-            coVerify(exactly = 1) { local.deleteAll() }
-            coVerify(exactly = 1) { local.insertAll(mockResultRemote) }
-            coVerify(exactly = 1) { remote.getUsers() }
+        coVerify(exactly = 1) { local.getUsers() }
+        coVerify(exactly = 1) { local.deleteAll() }
+        coVerify(exactly = 1) { local.insertAll(mockResultRemote) }
+        coVerify(exactly = 1) { remote.getUsers() }
 
-            assertEquals(mockResult, result)
-        }
+        assertEquals(mockResult, result)
+    }
 
     @ExperimentalCoroutinesApi
     @Test(expected = Exception::class)
-    fun `should throw an exception when get users is called`() =
-        runTest(StandardTestDispatcher()) {
+    fun `should throw an exception when get users is called`() = runTest {
 
-            coEvery{ repository.getUsers() } throws Exception()
+        coEvery { repository.getUsers() } throws Exception()
 
-            repository.getUsers()
-        }
+        repository.getUsers()
+    }
 }
