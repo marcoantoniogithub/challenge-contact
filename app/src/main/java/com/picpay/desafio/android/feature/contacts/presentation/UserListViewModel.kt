@@ -23,7 +23,7 @@ class UserListViewModel(
     val uiState: LiveData<ContactsUiState> = _uiState
 
     fun getUsers() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             try {
                 _uiState.postValue(ContactsUiState(loading = true))
                 val response = useCase.getUsers()

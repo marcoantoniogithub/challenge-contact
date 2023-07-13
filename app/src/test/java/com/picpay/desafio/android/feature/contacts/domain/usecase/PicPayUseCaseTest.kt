@@ -6,14 +6,12 @@ import com.picpay.desafio.android.feature.contacts.mock.MockContactProvider.mock
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
-class PicPayUseCaseTest: BaseTest(){
+class PicPayUseCaseTest : BaseTest(){
 
     private val picPayRepository: PicPayRepository = mockk()
-
     private lateinit var useCase: PicPayUseCase
 
     override fun setup() {
@@ -24,7 +22,7 @@ class PicPayUseCaseTest: BaseTest(){
     @ExperimentalCoroutinesApi
     @Test
     fun `should call repository when get users is called`() =
-        runTest(StandardTestDispatcher()) {
+        runTest {
             val mockResult = mockedListUser()
 
             coEvery { picPayRepository.getUsers() } returns mockResult
